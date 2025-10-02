@@ -1,0 +1,236 @@
+/* Responsive Design Utilities */
+/* Mobile-first responsive design with proper breakpoints */
+
+/* Extra small devices (phones, 576px and down) */
+@media (max-width: 575.98px) {
+  .sentiment-legend {
+    font-size: 0.65rem;
+    padding: 0.5rem;
+    max-width: 12rem;
+  }
+  
+  .sentiment-legend h3 {
+    font-size: 0.7rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .sentiment-legend .color-indicator {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+  
+  .controls-info {
+    font-size: 0.65rem;
+    padding: 0.5rem;
+    max-width: 10rem;
+  }
+  
+  .news-panel {
+    width: 100vw !important;
+    right: 0 !important;
+  }
+  
+  .news-panel-header {
+    padding: 0.75rem;
+  }
+  
+  .news-panel-header h2 {
+    font-size: 1.125rem;
+    line-height: 1.2;
+  }
+  
+  .news-activity-title {
+    font-size: 0.9rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .news-count-section {
+    padding: 0.75rem !important;
+  }
+  
+  .news-count-large {
+    font-size: 1.5rem !important;
+  }
+  
+  .news-details-section {
+    padding: 0.75rem !important;
+  }
+  
+  .geographic-section {
+    padding: 0.75rem !important;
+  }
+  
+  .global-header {
+    max-width: 15rem;
+    top: 0.5rem;
+    left: 0.5rem;
+  }
+  
+  .global-header h1 {
+    font-size: 1rem;
+    line-height: 1.2;
+  }
+  
+  .global-header p {
+    font-size: 0.6rem;
+    line-height: 1.1;
+  }
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .sentiment-legend {
+    font-size: 0.75rem;
+    padding: 0.75rem;
+    max-width: 14rem;
+  }
+  
+  .news-panel {
+    width: 20rem !important;
+  }
+  
+  .news-count-section {
+    padding: 1rem !important;
+  }
+  
+  .news-activity-title {
+    font-size: 1rem !important;
+  }
+  
+  .news-count-large {
+    font-size: 2rem !important;
+  }
+  
+  .global-header {
+    max-width: 18rem;
+  }
+  
+  .global-header h1 {
+    font-size: 1.25rem;
+  }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .news-panel {
+    width: 22rem !important;
+  }
+  
+  .global-header {
+    max-width: 20rem;
+  }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  .news-panel {
+    width: 24rem !important;
+  }
+  
+  .global-header {
+    max-width: 28rem;
+  }
+}
+
+/* Touch-friendly enhancements */
+@media (hover: none) and (pointer: coarse) {
+  /* Touch device styles */
+  .controls-info {
+    display: none; /* Hide mouse controls on touch devices */
+  }
+  
+  .sentiment-legend {
+    touch-action: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .news-panel {
+    overscroll-behavior: contain;
+  }
+}
+
+/* High DPI screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .sentiment-legend .color-indicator,
+  .sentiment-legend h3 {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Landscape orientation adjustments */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  .global-header {
+    top: 0.25rem;
+    left: 0.25rem;
+  }
+  
+  .global-header h1 {
+    font-size: 0.9rem;
+  }
+  
+  .global-header p {
+    font-size: 0.55rem;
+  }
+  
+  .sentiment-legend,
+  .controls-info {
+    bottom: 0.25rem;
+  }
+  
+  .sentiment-legend {
+    right: 0.25rem;
+    padding: 0.25rem;
+    max-width: 10rem;
+  }
+  
+  .controls-info {
+    left: 0.25rem;
+    padding: 0.25rem;
+    max-width: 8rem;
+  }
+}
+
+/* Prevent text selection on UI elements */
+.sentiment-legend,
+.controls-info,
+.global-header {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Ensure proper z-index stacking */
+.global-header {
+  z-index: 15;
+}
+
+.sentiment-legend {
+  z-index: 10;
+}
+
+.controls-info {
+  z-index: 10;
+}
+
+.news-panel {
+  z-index: 20;
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus improvements for keyboard navigation */
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid #4ade80;
+  outline-offset: 2px;
+}

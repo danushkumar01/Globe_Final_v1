@@ -328,7 +328,7 @@ const Globe = () => {
   };
 
   return (
-    <div className="w-full h-screen relative overflow-hidden bg-gradient-to-b from-gray-900 to-black">
+    <div className="w-full h-screen relative overflow-hidden bg-gradient-to-b from-gray-900 to-black touch-manipulation">
       {/* Background stars */}
       <div className="absolute inset-0">
         {[...Array(200)].map((_, i) => (
@@ -346,95 +346,101 @@ const Globe = () => {
         ))}
       </div>
 
-      {/* Header */}
-      <div className="absolute top-4 left-4 z-10">
-        <h1 className="text-3xl font-bold text-white mb-2">
+      {/* Header - Responsive */}
+      <div className="global-header absolute top-2 sm:top-4 left-2 sm:left-4 z-10 max-w-xs sm:max-w-md lg:max-w-lg">
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-1 sm:mb-2">
           🌍 Global News Sentiment Monitor
         </h1>
-        <p className="text-gray-300">
+        <p className="text-gray-300 text-xs sm:text-sm">
           Country colors reflect sentiment levels: 🟢 Positive • ⚪ Neutral • 🟠 Negative
         </p>
       </div>
 
-      {/* Controls info */}
-      <div className="absolute bottom-4 left-4 z-10 text-white text-sm bg-black bg-opacity-50 p-3 rounded">
-        <div>🖱️ Drag: Rotate</div>
-        <div>📱 Scroll: Zoom</div>
-        <div>🎯 Click markers: View Details</div>
+      {/* Controls info - Responsive */}
+      <div className="controls-info absolute bottom-4 left-4 z-10 text-white text-sm bg-black bg-opacity-50 p-2 sm:p-3 rounded max-w-xs">
+        <div className="hidden sm:block">🖱️ Drag: Rotate</div>
+        <div className="hidden sm:block">📱 Scroll: Zoom</div>
+        <div className="hidden sm:block">🎯 Click markers: View Details</div>
+        {/* Simplified mobile version */}
+        <div className="sm:hidden text-xs space-y-1">
+          <div>Drag: Rotate</div>
+          <div>Scroll: Zoom</div>
+          <div>Click: Details</div>
+        </div>
       </div>
 
-      {/* Legend */}
-      <div className="absolute bottom-4 right-4 z-10 bg-black bg-opacity-80 text-white p-4 rounded-lg">
-        <h3 className="text-sm font-bold mb-2">Sentiment Legend</h3>
-        <div className="space-y-1 text-xs">
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded" style={{ backgroundColor: '#1a5f3d' }}></div>
-            <span>Very Positive (≥50)</span>
+      {/* Legend - Responsive */}
+      <div className="sentiment-legend absolute bottom-4 right-4 z-10 bg-black bg-opacity-80 text-white p-2 sm:p-4 rounded-lg max-w-xs sm:max-w-sm">
+        <h3 className="text-xs sm:text-sm font-bold mb-1 sm:mb-2">Sentiment Legend</h3>
+        <div className="space-y-0.5 sm:space-y-1 text-xs">
+          <div className="flex items-center gap-1 sm:gap-2">
+            <div className="color-indicator w-3 h-3 sm:w-4 sm:h-4 rounded flex-shrink-0" style={{ backgroundColor: '#1a5f3d' }}></div>
+            <span className="text-xs truncate">Very Positive (≥50)</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded" style={{ backgroundColor: '#4ade80' }}></div>
-            <span>Positive (30-49)</span>
+          <div className="flex items-center gap-1 sm:gap-2">
+            <div className="color-indicator w-3 h-3 sm:w-4 sm:h-4 rounded flex-shrink-0" style={{ backgroundColor: '#4ade80' }}></div>
+            <span className="text-xs truncate">Positive (30-49)</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded" style={{ backgroundColor: '#9ca3af' }}></div>
-            <span>Neutral (20-29)</span>
+          <div className="flex items-center gap-1 sm:gap-2">
+            <div className="color-indicator w-3 h-3 sm:w-4 sm:h-4 rounded flex-shrink-0" style={{ backgroundColor: '#9ca3af' }}></div>
+            <span className="text-xs truncate">Neutral (20-29)</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded" style={{ backgroundColor: '#f97316' }}></div>
-            <span>Negative (10-19)</span>
+          <div className="flex items-center gap-1 sm:gap-2">
+            <div className="color-indicator w-3 h-3 sm:w-4 sm:h-4 rounded flex-shrink-0" style={{ backgroundColor: '#f97316' }}></div>
+            <span className="text-xs truncate">Negative (10-19)</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded" style={{ backgroundColor: '#dc2626' }}></div>
-            <span>Very Negative (&lt;10)</span>
+          <div className="flex items-center gap-1 sm:gap-2">
+            <div className="color-indicator w-3 h-3 sm:w-4 sm:h-4 rounded flex-shrink-0" style={{ backgroundColor: '#dc2626' }}></div>
+            <span className="text-xs truncate">Very Negative (&lt;10)</span>
           </div>
         </div>
       </div>
 
-      {/* News Panel - RIGHT SIDE */}
+      {/* News Panel - RIGHT SIDE - Responsive */}
       {selectedCountry && (
-        <div className="absolute top-0 right-0 h-screen w-96 bg-black bg-opacity-95 text-white z-10 flex flex-col shadow-2xl">
-          {/* Panel Header */}
-          <div className="p-6 border-b border-gray-700">
-            <div className="flex justify-between items-start mb-3">
-              <h2 className="text-2xl font-bold text-blue-400">{selectedCountry.name}</h2>
+        <div className="news-panel absolute top-0 right-0 h-screen w-full sm:w-80 md:w-72 lg:w-80 xl:w-96 bg-black bg-opacity-95 text-white z-20 flex flex-col shadow-2xl overflow-hidden">
+          {/* Panel Header - Responsive */}
+          <div className="news-panel-header p-3 sm:p-6 border-b border-gray-700">
+            <div className="flex justify-between items-start mb-2 sm:mb-3">
+              <h2 className="text-lg sm:text-2xl font-bold text-blue-400 truncate pr-2">{selectedCountry.name}</h2>
               <button 
                 onClick={() => {
                   setSelectedCountry(null);
                 }}
-                className="text-gray-400 hover:text-white text-2xl leading-none"
+                className="text-gray-400 hover:text-white text-xl sm:text-2xl leading-none flex-shrink-0"
               >
                 ×
               </button>
             </div>
-            <p className="text-gray-400 text-sm">
-              📍 Latitude: {selectedCountry.lat.toFixed(4)}° | Longitude: {selectedCountry.lon.toFixed(4)}°
+            <p className="text-gray-400 text-xs sm:text-sm">
+              📍 {selectedCountry.lat.toFixed(2)}°, {selectedCountry.lon.toFixed(2)}°
             </p>
           </div>
 
-          {/* Country Details */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-4">
-            <h3 className="text-lg font-semibold mb-4 text-gray-300">News Activity Overview</h3>
+          {/* Country Details - Responsive */}
+          <div className="flex-1 overflow-y-auto p-2 sm:p-6 space-y-2 sm:space-y-4">
+            <h3 className="news-activity-title text-sm sm:text-lg font-semibold mb-2 sm:mb-4 text-gray-300">News Activity Overview</h3>
             
-            <div className="bg-gray-800 bg-opacity-50 p-5 rounded-lg">
-              <div className="flex justify-between items-center mb-4">
-                <span className="text-gray-400">News Count</span>
-                <span className="text-3xl font-bold text-white">{selectedCountry.newsCount}</span>
+            <div className="news-count-section bg-gray-800 bg-opacity-50 p-2 sm:p-5 rounded-lg">
+              <div className="flex justify-between items-center mb-2 sm:mb-4">
+                <span className="text-gray-400 text-xs sm:text-base">News Count</span>
+                <span className="news-count-large text-xl sm:text-3xl font-bold text-white">{selectedCountry.newsCount}</span>
               </div>
               
-              <div className="flex items-center gap-3 mb-4">
+              <div className="flex items-center gap-1 sm:gap-3 mb-2 sm:mb-4">
                 <div 
-                  className="w-6 h-6 rounded-full"
+                  className="w-4 h-4 sm:w-6 sm:h-6 rounded-full flex-shrink-0"
                   style={{ backgroundColor: getNewsColor(selectedCountry.newsCount) }}
                 />
-                <span className="text-gray-300 font-medium">
-                  {selectedCountry.newsCount >= 50 ? '🟢 Very Positive Sentiment' : 
-                   selectedCountry.newsCount >= 30 ? '🟢 Positive Sentiment' : 
-                   selectedCountry.newsCount >= 20 ? '⚪ Neutral Sentiment' : 
-                   selectedCountry.newsCount >= 10 ? '🟠 Negative Sentiment' : '🔴 Very Negative Sentiment'}
+                <span className="text-gray-300 font-medium text-xs sm:text-base leading-tight">
+                  {selectedCountry.newsCount >= 50 ? 'Very Positive Sentiment' : 
+                   selectedCountry.newsCount >= 30 ? 'Positive Sentiment' : 
+                   selectedCountry.newsCount >= 20 ? 'Neutral Sentiment' : 
+                   selectedCountry.newsCount >= 10 ? 'Negative Sentiment' : 'Very Negative Sentiment'}
                 </span>
               </div>
 
-              <div className="w-full bg-gray-700 rounded-full h-3 overflow-hidden">
+              <div className="w-full bg-gray-700 rounded-full h-2 sm:h-3 overflow-hidden">
                 <div 
                   className="h-full transition-all duration-500 rounded-full"
                   style={{ 
@@ -445,36 +451,36 @@ const Globe = () => {
               </div>
             </div>
 
-            <div className="bg-gray-800 bg-opacity-50 p-5 rounded-lg">
-              <h4 className="font-semibold text-white mb-3">Sentiment: {selectedCountry.sentiment}</h4>
-              <p className="text-sm text-gray-400 mb-3">
+            <div className="news-details-section bg-gray-800 bg-opacity-50 p-3 sm:p-5 rounded-lg">
+              <h4 className="font-semibold text-white mb-2 text-sm sm:text-base">Sentiment: {selectedCountry.sentiment}</h4>
+              <p className="text-xs sm:text-sm text-gray-400 mb-2 sm:mb-3 leading-tight">
                 This country has {selectedCountry.newsCount} news articles currently being monitored.
                 The color indicator reflects the volume of news activity.
               </p>
-              <div className="text-xs text-gray-500 space-y-1">
+              <div className="text-xs text-gray-500 space-y-0.5 sm:space-y-1">
                 <p>• More articles = Higher activity level</p>
                 <p>• Colors range from green (low) to red (very high)</p>
                 <p>• Real-time monitoring of global news trends</p>
               </div>
             </div>
 
-            <div className="bg-gray-800 bg-opacity-50 p-5 rounded-lg">
-              <h4 className="font-semibold text-white mb-2">Geographic Data</h4>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
+            <div className="geographic-section bg-gray-800 bg-opacity-50 p-3 sm:p-5 rounded-lg">
+              <h4 className="font-semibold text-white mb-1 sm:mb-2 text-sm sm:text-base">Geographic Data</h4>
+              <div className="space-y-1 sm:space-y-2 text-xs sm:text-sm">
+                <div className="flex justify-between items-center">
                   <span className="text-gray-400">Latitude:</span>
-                  <span className="text-white font-mono">{selectedCountry.lat.toFixed(4)}°</span>
+                  <span className="text-white font-mono text-xs sm:text-sm">{selectedCountry.lat.toFixed(4)}°</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between items-center">
                   <span className="text-gray-400">Longitude:</span>
-                  <span className="text-white font-mono">{selectedCountry.lon.toFixed(4)}°</span>
+                  <span className="text-white font-mono text-xs sm:text-sm">{selectedCountry.lon.toFixed(4)}°</span>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Footer Info */}
-          <div className="p-4 border-t border-gray-700 bg-gray-900">
+          <div className="p-2 sm:p-4 border-t border-gray-700 bg-gray-900">
             <p className="text-xs text-gray-400 text-center">
               🌍 Real-time global news monitoring
             </p>
