@@ -1,82 +1,7 @@
 import React, { useState } from 'react';
 
-// Sample news data - your team can replace this with real API calls
-const sampleNewsData = {
-  1: { // United States
-    'New York': [
-      {
-        id: 1,
-        title: 'Tech Innovation Hub Expands in Manhattan',
-        summary: 'Major tech companies announce new offices in NYC...',
-        category: 'Technology',
-        severity: 'high',
-        timestamp: '2025-10-02T10:30:00Z'
-      },
-      {
-        id: 2,
-        title: 'Climate Initiative Launched in Central Park',
-        summary: 'New environmental program aims to reduce carbon footprint...',
-        category: 'Environment',
-        severity: 'medium',
-        timestamp: '2025-10-02T08:15:00Z'
-      }
-    ],
-    'Los Angeles': [
-      {
-        id: 3,
-        title: 'Hollywood Studios Embrace AI Technology',
-        summary: 'Film industry adopts new artificial intelligence tools...',
-        category: 'Entertainment',
-        severity: 'medium',
-        timestamp: '2025-10-02T14:20:00Z'
-      }
-    ],
-    'Chicago': [
-      {
-        id: 4,
-        title: 'Financial District Sees Record Growth',
-        summary: 'Chicago markets reach new heights this quarter...',
-        category: 'Finance',
-        severity: 'high',
-        timestamp: '2025-10-02T12:45:00Z'
-      }
-    ]
-  },
-  2: { // United Kingdom
-    'London': [
-      {
-        id: 5,
-        title: 'Brexit Trade Agreements Updated',
-        summary: 'New international trade deals announced...',
-        category: 'Politics',
-        severity: 'high',
-        timestamp: '2025-10-02T16:00:00Z'
-      }
-    ],
-    'Manchester': [
-      {
-        id: 6,
-        title: 'Football Championship Finals Set',
-        summary: 'Premier League prepares for exciting season finale...',
-        category: 'Sports',
-        severity: 'low',
-        timestamp: '2025-10-02T18:30:00Z'
-      }
-    ]
-  },
-  3: { // Japan
-    'Tokyo': [
-      {
-        id: 7,
-        title: 'Robotics Conference Showcases Future',
-        summary: 'Latest advancements in robotics technology unveiled...',
-        category: 'Technology',
-        severity: 'high',
-        timestamp: '2025-10-02T09:00:00Z'
-      }
-    ]
-  }
-};
+// Note: Sample news data has been moved to DataService.js as fallback
+// Real news data is now loaded via useCountryNews hook from Supabase
 
 // Get severity color
 const getSeverityColor = (severity) => {
@@ -101,12 +26,13 @@ const getCategoryIcon = (category) => {
   }
 };
 
-const NewsPanel = ({ selectedCountry, selectedCity, onCitySelect, onClose }) => {
+const NewsPanel = ({ selectedCountry, selectedCity, onCitySelect, onClose, newsData, newsLoading }) => {
   const [activeTab, setActiveTab] = useState('overview');
 
   if (!selectedCountry) return null;
 
-  const countryNews = sampleNewsData[selectedCountry.id] || {};
+  // Use newsData from props (loaded via useCountryNews hook in parent component)
+  const countryNews = newsData || {};
   const cityNews = selectedCity ? countryNews[selectedCity.name] || [] : [];
 
   const allCountryNews = Object.values(countryNews).flat();

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { useTheme } from '../hooks/useTheme.jsx'
+import { useSentimentData } from '../hooks/useData.js'
 
 const WorldMap = () => {
   const mapRef = useRef(null)
@@ -12,9 +13,12 @@ const WorldMap = () => {
   
   const { currentTheme } = useTheme()
   
+  // Load sentiment data from Supabase
+  const { sentimentData, loading: sentimentLoading, error: sentimentError } = useSentimentData()
+  
   const [countryColors, setCountryColors] = useState({})
   
-  const colors = ['#28a745', '#dc3545', '#fd7e14'] // Green, Red, Orange
+  const colors = ['#28a745', '#dc3545', '#fd7e14'] // Green, Red, Orange (fallback colors)
 
   // Initialize the map
   useEffect(() => {
@@ -85,6 +89,7 @@ const WorldMap = () => {
         mapInstanceRef.current = null
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // Separate function to initialize map layers
@@ -140,6 +145,7 @@ const WorldMap = () => {
         }
       })
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTheme])
 
   // ✅ Load country data safely
@@ -231,8 +237,15 @@ const WorldMap = () => {
     const newCountryColors = {}
     countries.forEach(country => {
       const countryName = country.properties.name || country.properties.NAME || 'Unknown'
-      const colorIndex = Math.floor(Math.random() * colors.length)
-      newCountryColors[countryName] = colors[colorIndex]
+      
+      // Try to use real sentiment data from Supabase first
+      if (sentimentData[countryName]) {
+        newCountryColors[countryName] = sentimentData[countryName].color
+      } else {
+        // Fallback to random colors if no sentiment data
+        const colorIndex = Math.floor(Math.random() * colors.length)
+        newCountryColors[countryName] = colors[colorIndex]
+      }
     })
     return newCountryColors
   }
@@ -344,6 +357,30 @@ const WorldMap = () => {
   }
 
   const showCountryInfo = (countryName, map) => {
+    // Get sentiment data for this country
+    const sentiment = sentimentData[countryName]
+    
+    const popupContent = `
+      <div style="text-align: center; padding: 12px 16px;">
+        <h3 style="margin: 0; color: var(--text-primary); font-size: 20px; font-weight: 600;">${countryName}</h3>
+        ${sentiment ? `
+          <div style="margin-top: 8px; padding: 8px; background: rgba(0,0,0,0.1); border-radius: 4px;">
+            <div style="font-size: 14px; color: var(--text-secondary);">
+              Sentiment Score: <strong>${sentiment.score.toFixed(2)}</strong>
+            </div>
+            <div style="width: 20px; height: 20px; background: ${sentiment.color}; border-radius: 50%; margin: 4px auto;"></div>
+            <div style="font-size: 12px; color: var(--text-muted);">
+              🔴 Live data from Supabase
+            </div>
+          </div>
+        ` : `
+          <div style="margin-top: 8px; font-size: 12px; color: var(--text-muted);">
+            ⚪ No sentiment data available
+          </div>
+        `}
+      </div>
+    `
+    
     L.popup({
       className: 'professional-popup',
       closeButton: true,
@@ -351,11 +388,7 @@ const WorldMap = () => {
       closeOnEscapeKey: true
     })
       .setLatLng(map.getCenter())
-      .setContent(`
-        <div style="text-align: center; padding: 12px 16px;">
-          <h3 style="margin: 0; color: var(--text-primary); font-size: 20px; font-weight: 600;">${countryName}</h3>
-        </div>
-      `)
+      .setContent(popupContent)
       .openOn(map)
   }
 
@@ -441,7 +474,34 @@ const WorldMap = () => {
     }
   }
 
-  return <div ref={mapRef} style={{ height: '100vh', width: '100%' }} />
+  return (
+    <div style={{ position: 'relative', height: '100vh', width: '100%' }}>
+      <div ref={mapRef} style={{ height: '100vh', width: '100%' }} />
+      
+      {/* Data status indicator */}
+      <div style={{
+        position: 'absolute',
+        top: '10px',
+        left: '10px',
+        background: 'rgba(0, 0, 0, 0.8)',
+        color: 'white',
+        padding: '8px 12px',
+        borderRadius: '4px',
+        fontSize: '12px',
+        zIndex: 1000
+      }}>
+        {sentimentLoading ? (
+          <span style={{ color: '#fbbf24' }}>📡 Loading sentiment data...</span>
+        ) : sentimentError ? (
+          <span style={{ color: '#f87171' }}>⚠️ Using fallback colors</span>
+        ) : (
+          <span style={{ color: '#4ade80' }}>
+            ✅ Live sentiment data • {Object.keys(sentimentData).length} countries
+          </span>
+        )}
+      </div>
+    </div>
+  )
 }
 
 export default WorldMap
